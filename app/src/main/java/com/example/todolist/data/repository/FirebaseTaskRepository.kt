@@ -31,7 +31,7 @@ class FirebaseTaskRepository(
             .child(uid)
             .child("tasks")
             .push()
-            .setValue(TaskItem(name, description, false, System.currentTimeMillis()))
+            .setValue(TaskItem(name, description))
             .await()
     }
 
@@ -62,8 +62,8 @@ class FirebaseTaskRepository(
             .child(userUid)
             .child("tasks")
             .child(taskUid)
-            .push()
             .setValue(task.copy(name = newName, description = newDescription, completed = newCompleted))
+            .await()
     }
 
     override suspend fun deleteTask(userUid: String, taskUid: String) {
