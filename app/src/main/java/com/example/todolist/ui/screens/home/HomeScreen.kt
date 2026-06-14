@@ -129,6 +129,7 @@ fun HomeScreen(navController: NavController) {
                             TodoCard(
                                 task = task,
                                 onCheckedChange = { viewModel.onCheckedChange(task.id, !task.completed) },
+                                onDelete = { viewModel.deleteTask(task.id) },
                                 onClick = { navController.navigate(NewTask(task.id, task.name, task.description)) }
                             )
                         }

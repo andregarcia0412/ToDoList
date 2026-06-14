@@ -66,6 +66,26 @@ class HomeViewModel: ViewModel() {
         }
     }
 
+    fun deleteTask(taskId: String) {
+        val tasks = _uiState.value.tasks ?: return
+
+        _uiState.update { state ->
+            state.copy(tasks = tasks.filter { it.id != taskId })
+        }
+
+        viewModelScope.launch {
+            try {
+                val user = authRepository.currentUserOrNull()
+                    ?: throw Exception("Erro ao capturar dados do usuário atual")
+                taskRepository.deleteTask(user.uid, taskId)
+            } catch (e: Exception) {
+                _uiState.update { state ->
+                    state.copy(tasks = tasks)
+                }
+            }
+        }
+    }
+
     fun signOut() {
         viewModelScope.launch {
             authRepository.signOut()
