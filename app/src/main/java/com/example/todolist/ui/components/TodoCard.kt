@@ -28,7 +28,8 @@ import com.example.todolist.domain.model.TaskItem
 fun TodoCard(
     task: TaskItem,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     val cardShape = RoundedCornerShape(12.dp)
     val textDecoration = if (task.completed) TextDecoration.LineThrough else TextDecoration.None
@@ -39,7 +40,8 @@ fun TodoCard(
             .fillMaxWidth()
             .border(width = 1.dp, color = Color(0xFF393939), shape = cardShape),
         shape = cardShape,
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1B1B))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1B1B)),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier

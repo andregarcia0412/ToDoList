@@ -48,6 +48,30 @@ object Validators {
         }
     }
 
+    fun validateTaskName(
+        taskName: String
+    ): ValidationResult {
+        return when {
+            taskName.isBlank() -> ValidationResult.Invalid("Insira o nome da tarefa")
+            taskName.trim().length < MIN_TASK_NAME_LENGTH ->
+                ValidationResult.Invalid("Nome deve ter no mínimo $MIN_NAME_LENGTH caracteres")
+            else -> ValidationResult.Valid
+        }
+    }
+
+    fun validateTaskDescription(
+        taskDescription: String
+    ): ValidationResult {
+        return when {
+            taskDescription.isBlank() -> ValidationResult.Invalid("Insira a descrição da tarefa")
+            taskDescription.trim().length < MIN_TASK_DESCRIPTION_LENGTH ->
+                ValidationResult.Invalid("Descrição deve ter no mínimo $MIN_TASK_DESCRIPTION_LENGTH caracteres")
+            else -> ValidationResult.Valid
+        }
+    }
+
     private const val MIN_PASSWORD_LENGTH = 6
     private const val MIN_NAME_LENGTH = 3
+    private const val MIN_TASK_NAME_LENGTH = 3
+    private const val MIN_TASK_DESCRIPTION_LENGTH = 3
 }
