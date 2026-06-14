@@ -6,7 +6,8 @@ data class LoginState(
     val password: String = "",
     val passwordError: String? = null,
     val generalError: String? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val loginSuccess: Boolean = false
 ) {
     val isLoginButtonEnabled: Boolean
         get() = !isLoading
