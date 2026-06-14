@@ -41,7 +41,7 @@ class NewTaskViewModel: ViewModel() {
         }
     }
 
-    fun onSavePress() {
+    fun onSavePress(isCreate: Boolean, taskId: String? = null) {
         val state = _uiState.value
 
         val nameResult = Validators.validateTaskName(state.name)
@@ -56,7 +56,11 @@ class NewTaskViewModel: ViewModel() {
             }
             return
         }
-        performCreation()
+        if(isCreate) {
+            performCreation()
+        } else {
+            performUpdate(taskId ?: throw Exception("Task não pode ser nulo na tela de edição"))
+        }
     }
 
     private fun performCreation() {
@@ -79,6 +83,37 @@ class NewTaskViewModel: ViewModel() {
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(isLoading = false, generalError = e.message)
+                }
+            }
+        }
+    }
+
+    private fun performUpdate(taskId: String) {
+        viewModelScope.launch {
+            val state = _uiState.value
+            try {
+                _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        generalError = null
+                    )
+                }
+
+                val user = authRepository.currentUserOrNull() ?: throw Exception("Erro ao capturar dados do usuário")
+                taskRepository.updateTask(user.uid, taskId, name = state.name, description = state.description)
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        creationSuccess = true
+                    )
+                }
+            } catch(e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        generalError = e.message
+                    )
                 }
             }
         }

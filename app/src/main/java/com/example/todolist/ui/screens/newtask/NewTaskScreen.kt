@@ -25,7 +25,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.todolist.ui.components.GenericButton
 import com.example.todolist.ui.components.Input
-import com.example.todolist.ui.components.LogoBox
 import com.example.todolist.ui.components.TopBarDefault
 import com.example.todolist.ui.screens.home.Home
 import kotlinx.serialization.Serializable
@@ -48,12 +47,14 @@ fun NewTaskScreen(newTask: NewTask, navController: NavController) {
         }
     }
 
+    val isEditScreen = newTask.name != null && newTask.taskId != null && newTask.description != null
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color(0xFF131313),
         topBar = {
             TopBarDefault(
-                title = if (newTask.name != null) "Editar ${newTask.name}" else "Nova Tarefa"
+                title = if (isEditScreen) "Editar ${newTask.name}" else "Nova Tarefa"
             )
         }
     ) { innerPadding ->
@@ -107,7 +108,7 @@ fun NewTaskScreen(newTask: NewTask, navController: NavController) {
 
                 GenericButton(
                     text = "Salvar",
-                    onClick = { viewModel.onSavePress() },
+                    onClick = { viewModel.onSavePress(!isEditScreen, newTask.taskId) },
                     containerColor = Color(0xFF0F62FE),
                     contentColor = Color.White,
                     enabled = screenState.isSaveButtonEnabled
@@ -129,6 +130,7 @@ fun NewTaskScreen(newTask: NewTask, navController: NavController) {
 
 @Serializable
 data class NewTask(
+    val taskId: String? = null,
     val name: String? = null,
     val description: String? = null,
 )
