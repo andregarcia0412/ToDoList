@@ -65,4 +65,10 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
+
+    fun signOut() {
+        viewModelScope.launch {
+            authRepository.signOut()
+        }
+    }
 }

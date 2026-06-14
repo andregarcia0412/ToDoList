@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,6 +30,7 @@ import com.example.todolist.ui.components.FloatingButton
 import com.example.todolist.ui.components.GenericButton
 import com.example.todolist.ui.components.TodoCard
 import com.example.todolist.ui.components.TopBarDefault
+import com.example.todolist.ui.screens.login.Login
 import com.example.todolist.ui.screens.newtask.NewTask
 import kotlinx.serialization.Serializable
 
@@ -80,7 +83,16 @@ fun HomeScreen(navController: NavController) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
-                    TopBarDefault("Lista de Tarefas")
+                    TopBarDefault(
+                        title = "Lista de Tarefas",
+                        icon = Icons.AutoMirrored.Filled.Logout,
+                        onIconClick = {
+                            viewModel.signOut()
+                            navController.navigate(Login) {
+                                popUpTo<Login> { inclusive = true }
+                            }
+                        }
+                    )
                 },
                 containerColor = Color(0xFF131313),
                 floatingActionButton = {
