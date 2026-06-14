@@ -11,6 +11,7 @@ data class RegisterState(
     val confirmPasswordError: String? = null,
     val generalError: String? = null,
     val isLoading: Boolean = false,
+    val registerSuccess: Boolean = false
 ) {
     val isRegisterButtonEnabled: Boolean
         get() = !isLoading
