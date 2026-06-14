@@ -18,7 +18,9 @@ class FirebaseTaskRepository(
             .await()
 
         return snapshot.children
-            .mapNotNull { it.getValue<TaskItem>() }
+            .mapNotNull { child ->
+                child.getValue<TaskItem>()?.copy(id = child.key.orEmpty())
+            }
             .sortedBy { it.createdAt }
     }
 
@@ -27,33 +29,34 @@ class FirebaseTaskRepository(
         name: String,
         description: String
     ) {
-        firebaseDatabase.getReference("users")
+        val ref = firebaseDatabase.getReference("users")
             .child(uid)
             .child("tasks")
             .push()
-            .setValue(TaskItem(name, description))
+        ref.setValue(TaskItem(id = ref.key.orEmpty(), name = name, description = description))
             .await()
     }
 
-    override suspend fun getTaskByUid(userUid: String, taskUid: String): TaskItem {
+    override suspend fun getTaskById(userUid: String, taskId: String): TaskItem {
         val snapshot = firebaseDatabase.getReference("users")
             .child(userUid)
             .child("tasks")
-            .child(taskUid)
+            .child(taskId)
             .get()
             .await()
 
-        return snapshot.getValue<TaskItem>() ?: throw Exception("Tarefa não encontrada")
+        return snapshot.getValue<TaskItem>()?.copy(id = snapshot.key.orEmpty())
+            ?: throw Exception("Tarefa não encontrada")
     }
 
     override suspend fun updateTask(
         userUid: String,
-        taskUid: String,
+        taskId: String,
         name: String?,
         description: String?,
         completed: Boolean?
     ) {
-        val task = getTaskByUid(userUid, taskUid)
+        val task = getTaskById(userUid, taskId)
         val newName = name ?: task.name
         val newDescription = description ?: task.description
         val newCompleted = completed ?: task.completed
@@ -61,16 +64,16 @@ class FirebaseTaskRepository(
         firebaseDatabase.getReference("users")
             .child(userUid)
             .child("tasks")
-            .child(taskUid)
+            .child(taskId)
             .setValue(task.copy(name = newName, description = newDescription, completed = newCompleted))
             .await()
     }
 
-    override suspend fun deleteTask(userUid: String, taskUid: String) {
+    override suspend fun deleteTask(userUid: String, taskId: String) {
         firebaseDatabase.getReference("users")
             .child(userUid)
             .child("tasks")
-            .child(taskUid)
+            .child(taskId)
             .removeValue()
             .await()
     }

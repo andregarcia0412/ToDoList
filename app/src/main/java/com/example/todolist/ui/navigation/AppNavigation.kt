@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.todolist.ui.screens.home.Home
+import com.example.todolist.ui.screens.home.HomeScreen
 import com.example.todolist.ui.screens.login.Login
 import com.example.todolist.ui.screens.login.LoginScreen
 import com.example.todolist.ui.screens.register.Register
@@ -23,6 +25,10 @@ fun AppNavigation() {
 
         composable<Register> {
             RegisterScreen(navController)
+        }
+
+        composable<Home> {
+            HomeScreen(navController)
         }
     }
 }

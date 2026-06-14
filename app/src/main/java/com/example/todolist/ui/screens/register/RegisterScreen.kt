@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import androidx.navigation.NavController
 import com.example.todolist.ui.components.GenericButton
 import com.example.todolist.ui.components.Input
 import com.example.todolist.ui.components.LogoBox
+import com.example.todolist.ui.screens.home.Home
 import com.example.todolist.ui.screens.login.Login
 import kotlinx.serialization.Serializable
 
@@ -33,6 +35,14 @@ import kotlinx.serialization.Serializable
 fun RegisterScreen(navController: NavController) {
     val viewModel: RegisterViewModel = viewModel()
     val screenState = viewModel.uiState.collectAsState().value
+
+    LaunchedEffect(screenState.registerSuccess) {
+        if(screenState.registerSuccess) {
+            navController.navigate(Home) {
+                popUpTo<Home> { inclusive = true }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

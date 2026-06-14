@@ -7,9 +7,9 @@ interface TaskRepository {
 
     suspend fun createTask(uid: String, name: String, description: String)
 
-    suspend fun getTaskByUid(userUid: String, taskUid: String): TaskItem
+    suspend fun getTaskById(userUid: String, taskId: String): TaskItem
 
-    suspend fun updateTask(userUid: String, taskUid: String, name: String? = null, description: String? = null, completed: Boolean? = null)
+    suspend fun updateTask(userUid: String, taskId: String, name: String? = null, description: String? = null, completed: Boolean? = null)
 
-    suspend fun deleteTask(userUid: String, taskUid: String)
+    suspend fun deleteTask(userUid: String, taskId: String)
 }
